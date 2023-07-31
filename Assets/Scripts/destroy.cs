@@ -20,9 +20,9 @@ public class destroy : MonoBehaviour
     /// <Summary>
     /// コライダーに衝突したゲームオブジェクトを破棄します。
     /// </Summary>
-    void OnCollisionEnter(Collision other)
+    void OnCollisionEnter(Collision hit)
     {
         // 衝突した相手を闇の彼方に消し去ります。
-        Destroy(other.gameObject);
+        Destroy(hit.gameObject);
     }
 }

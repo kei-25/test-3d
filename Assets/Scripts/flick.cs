@@ -23,5 +23,18 @@ public class slide : MonoBehaviour
         {
             transform.position = target;
         }
+
+    }
+
+    void OnCollisionEnter(Collision hit)
+    {
+        checkItem(hit.collider.gameObject);
+    }
+    void checkItem(GameObject obj)
+    {
+        if (obj.name=="Flick(Clone)")
+        {
+            Debug.Log("FLC");
+        }
     }
 }

@@ -158,9 +158,13 @@ public class Judge : MonoBehaviour
                 //GManager.instance.ratioScore += 5;
                 //ミス
             }
+        
         }
 
     }
+    
+
+
     void Judgement(float timeLag, int numOffset)
     {
         audio.PlayOneShot(hitSound);
@@ -230,8 +234,27 @@ public class Judge : MonoBehaviour
 
     }
 
+    public void deleteDataF(int numOffset)//すでにたたいたノーツを削除する関数
+    {
+        //NotesManager notesManager = this.notesManager; // notesManager変数を使ってNotesManagerのインスタンスを取得
+        notesManager.NotesTimeF.RemoveAt(numOffset);
+        notesManager.LaneNumF.RemoveAt(numOffset);
+        notesManager.NoteTypeF.RemoveAt(numOffset);
+        notesManager.NoteNumF.RemoveAt(numOffset);
+        Destroy(notesManager.NotesObjF[numOffset]);          // オブジェクトをシーンから削除
+        notesManager.NotesObjF.Remove(notesManager.NotesObjF[numOffset]);  // リストからオブジェクトを削除
+
+        GManager.instance.score = (int)Math.Round(1000000 * Math.Floor(GManager.instance.ratioScore / GManager.instance.maxScore * 1000000) / 1000000);
+        //↑new!!
+
+        comboText.text = GManager.instance.combo.ToString();//new!!
+        scoreText.text = GManager.instance.score.ToString();//new!!
+
+    }
+
     void message(int judge)//判定を表示する
     {
         Instantiate(MessageObj[judge], new Vector3(notesManager.LaneNum[0] - 1.5f, 0.76f, 0.15f), Quaternion.Euler(45, 0, 0));
     }
+
 }
