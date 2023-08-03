@@ -21,7 +21,7 @@ public class flickTest : MonoBehaviour
             // カーソル位置のz座標を10に
             mousePosition.z = 10;
             // カーソル位置をワールド座標に変換
-            Vector3 target = Camera.main.ScreenToWorldPoint(new Vector3(mousePosition.x, 97f, 2.8f)); //左220,右880
+            Vector3 target = Camera.main.ScreenToWorldPoint(new Vector3(mousePosition.x, 103f, 2.8f)); //左220,右880
             // GameObjectのtransform.positionにカーソル位置(ワールド座標)を代入
             if (mousePosition.x > 237 && mousePosition.x < 865)
             {
@@ -33,10 +33,10 @@ public class flickTest : MonoBehaviour
             {
                 int lane = notesManager.LaneNumF[0];
                 message(lane, 1);
-                judge.deleteDataF(0);
                 Debug.Log("Miss");
                 GManager.instance.miss++;
                 GManager.instance.combo = 0;
+                judge.deleteDataF(0);
                 //GManager.instance.ratioScore += 5;
                 //ミス
             }
@@ -172,9 +172,6 @@ public class flickTest : MonoBehaviour
                     }
                 }
             }
-
-
-            
         }
     }
 

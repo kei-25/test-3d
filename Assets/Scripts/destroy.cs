@@ -4,9 +4,7 @@ using UnityEngine;
 
 public class destroy : MonoBehaviour
 {
-/// <Summary>
-/// コライダーに衝突したゲームオブジェクトを破棄するスクリプトです。
-/// </Summary>
+    [SerializeField] NotesManager notesManager;//スクリプト「notesManager」を入れる変数
     void Start()
     {
 
@@ -17,12 +15,16 @@ public class destroy : MonoBehaviour
 
     }
 
-    /// <Summary>
-    /// コライダーに衝突したゲームオブジェクトを破棄します。
-    /// </Summary>
     void OnCollisionEnter(Collision hit)
     {
-        // 衝突した相手を闇の彼方に消し去ります。
-        Destroy(hit.gameObject);
+        checkItem(hit.collider.gameObject);
+    }
+
+    void checkItem(GameObject obj)
+    {
+        if (obj.name == "ロングノーツ(Clone)")
+        {
+            Destroy(notesManager.NotesObjL[0]);
+        }
     }
 }
