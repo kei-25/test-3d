@@ -10,7 +10,6 @@ public class Data
     public int BPM;
     public int offset;
     public Note[] notes, longNotes;
-
 }
 [Serializable]
 public class Note
@@ -61,8 +60,10 @@ public class NotesManager : MonoBehaviour
     {
         NotesSpeed = GManager.instance.noteSpeed;
         noteNum = 0;
-        songName = "Danger";
-        songNameFlick = "Danger - ÉRÉsÅ[";
+        songName = "DangerM";
+        songNameFlick = "DangerMF";
+        songName = "seetMusic/" + songName;
+        songNameFlick = "seetMusic/" + songNameFlick;
         Load(songName, songNameFlick);
     }
 
