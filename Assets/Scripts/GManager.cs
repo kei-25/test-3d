@@ -6,6 +6,8 @@ public class GManager : MonoBehaviour
 {
     public static GManager instance = null;
 
+    public bool startFlag = false;
+
     public float maxScore;//new!!
     public float ratioScore;//new!!
 

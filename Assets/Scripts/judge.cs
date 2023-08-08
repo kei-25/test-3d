@@ -3,6 +3,9 @@ using UnityEngine;
 using TMPro;//new!!
 //using System.Diagnostics;
 using UnityEngine.UI;
+using System.Threading;
+using UnityEngine.SceneManagement;
+
 
 public class Judge : MonoBehaviour
 {
@@ -22,7 +25,7 @@ public class Judge : MonoBehaviour
 
     AudioSource audio;
     [SerializeField] AudioClip hitSound;
-
+    float lastTime = 0;
     void Start()
     {
         audio = GetComponent<AudioSource>();
@@ -38,11 +41,64 @@ public class Judge : MonoBehaviour
     bool longNoteflag1 = false;
     bool longNoteflag2 = false;
     bool longNoteflag3 = false;
+
+    float TimeLagMiss = 0.23f;
+    float tempTimeLag = 0;
+
+    bool flag = false;
+    bool timeFlag = false;
+    float time;
+
+    public static int combo;
+    public static int maxcombo;
+    public static int score;
+    public static int perfect;
+    public static int great;
+    public static int good;
+    public static int miss;
     void Update()
     {
+
+        if(!flag)
+        {
+            float NotelastTime = notesManager.NotesTime[notesManager.NotesTime.Count - 1];
+            float NotelastTimeL = notesManager.NotesTimeL[notesManager.NotesTimeL.Count - 1];
+            float NotelastTimeF = notesManager.NotesTimeF[notesManager.NotesTimeF.Count - 1];
+            for (int i = 0; i < 3; i++)
+            {
+                if (NotelastTime > NotelastTimeL)
+                {
+                    lastTime = NotelastTime;
+                }
+                else
+                {
+                    lastTime = NotelastTimeL;
+                }
+                if (NotelastTimeF > lastTime)
+                {
+                    lastTime = NotelastTimeF;
+                }
+            }
+            Debug.Log(NotelastTime + " " + NotelastTimeL + " " + NotelastTimeF + " " + lastTime);
+            flag = true;
+        }
         if (GManager.instance.Start)
         {
-
+            time += Time.deltaTime;
+            if(time>lastTime + 0.4f && !timeFlag)
+            {
+                combo = GManager.instance.combo;
+                maxcombo = GManager.instance.maxCombo;
+                score = GManager.instance.score;
+                perfect = GManager.instance.perfect;
+                great = GManager.instance.great;
+                good = GManager.instance.bad;
+                miss = GManager.instance.miss;
+                Debug.Log("終了");
+                timeFlag = true;
+                Thread.Sleep(1000);
+                SceneManager.LoadScene("result Scene");
+            }
             if (Input.GetKeyUp(KeyCode.D))
             {
                 longNoteflag0 = false;
@@ -60,25 +116,26 @@ public class Judge : MonoBehaviour
                 longNoteflag3 = false;
             }
 
-
+            if (notesManager.NotesTime.Count != 0)
+            {
+                tempTimeLag = GetABS(Time.time - (notesManager.NotesTime[0] + GManager.instance.StartTime));
+            }
             if (Input.GetKeyDown(KeyCode.D))//〇キーが押されたとき
             {
-                longNoteflag0 =  true;
-                if (notesManager.LaneNum[0] == 0)//押されたボタンはレーンの番号とあっているか？
+                longNoteflag0 = true;
+                if (notesManager.LaneNum[0] == 0 && tempTimeLag <= TimeLagMiss)//押されたボタンはレーンの番号とあっているか？
                 {
                     Judgement(GetABS(Time.time - (notesManager.NotesTime[0] + GManager.instance.StartTime)), 0);
                 }
-
-
-                else if (notesManager.LaneNum[1] == 0)
+                else if (notesManager.LaneNum[1] == 0 && tempTimeLag <= TimeLagMiss)
                 {
                     Judgement(GetABS(Time.time - (notesManager.NotesTime[0] + GManager.instance.StartTime)), 1);
                 }
-                else if (notesManager.LaneNum[2] == 0)
+                else if (notesManager.LaneNum[2] == 0 && tempTimeLag <= TimeLagMiss)
                 {
                     Judgement(GetABS(Time.time - (notesManager.NotesTime[0] + GManager.instance.StartTime)), 2);
                 }
-                else if (notesManager.LaneNum[3] == 0)
+                else if (notesManager.LaneNum[3] == 0 && tempTimeLag <= TimeLagMiss)
                 {
                     Judgement(GetABS(Time.time - (notesManager.NotesTime[0] + GManager.instance.StartTime)), 3);
                 }
@@ -87,7 +144,7 @@ public class Judge : MonoBehaviour
                 else
 
                 {
-                    if (notesManager.LaneNum[1] == 0 && notesManager.NoteNum[0] == notesManager.NoteNum[1])
+                    if (notesManager.LaneNum[1] == 0 && notesManager.NoteNum[0] == notesManager.NoteNum[1] && tempTimeLag <= TimeLagMiss)
                     {
                         Judgement(GetABS(Time.time - (notesManager.NotesTime[1] + GManager.instance.StartTime)), 1);
                     }
@@ -96,21 +153,19 @@ public class Judge : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.F))
             {
                 longNoteflag1 = true;
-                if (notesManager.LaneNum[0] == 1)
+                if (notesManager.LaneNum[0] == 1 && tempTimeLag <= TimeLagMiss)
                 {
                     Judgement(GetABS(Time.time - (notesManager.NotesTime[0] + GManager.instance.StartTime)), 0);
                 }
-
-
-                else if (notesManager.LaneNum[1] == 1)
+                else if (notesManager.LaneNum[1] == 1 && tempTimeLag <= TimeLagMiss)
                 {
                     Judgement(GetABS(Time.time - (notesManager.NotesTime[0] + GManager.instance.StartTime)), 1);
                 }
-                else if (notesManager.LaneNum[2] == 1)
+                else if (notesManager.LaneNum[2] == 1 && tempTimeLag <= TimeLagMiss)
                 {
                     Judgement(GetABS(Time.time - (notesManager.NotesTime[0] + GManager.instance.StartTime)), 2);
                 }
-                else if (notesManager.LaneNum[3] == 1)
+                else if (notesManager.LaneNum[3] == 1 && tempTimeLag <= TimeLagMiss)
                 {
                     Judgement(GetABS(Time.time - (notesManager.NotesTime[0] + GManager.instance.StartTime)), 3);
                 }
@@ -118,7 +173,7 @@ public class Judge : MonoBehaviour
 
                 else
                 {
-                    if (notesManager.LaneNum[1] == 1 && notesManager.NoteNum[0] == notesManager.NoteNum[1])
+                    if (notesManager.LaneNum[1] == 1 && notesManager.NoteNum[0] == notesManager.NoteNum[1] && tempTimeLag <= TimeLagMiss)
                     {
                         Judgement(GetABS(Time.time - (notesManager.NotesTime[1] + GManager.instance.StartTime)), 1);
                     }
@@ -127,21 +182,19 @@ public class Judge : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.J))
             {
                 longNoteflag2 = true;
-                if (notesManager.LaneNum[0] == 2)
+                if (notesManager.LaneNum[0] == 2 && tempTimeLag <= TimeLagMiss)
                 {
                     Judgement(GetABS(Time.time - (notesManager.NotesTime[0] + GManager.instance.StartTime)), 0);
                 }
-
-
-                else if (notesManager.LaneNum[1] == 2)
+                else if (notesManager.LaneNum[1] == 2 && tempTimeLag <= TimeLagMiss)
                 {
                     Judgement(GetABS(Time.time - (notesManager.NotesTime[0] + GManager.instance.StartTime)), 1);
                 }
-                else if (notesManager.LaneNum[2] == 2)
+                else if (notesManager.LaneNum[2] == 2 && tempTimeLag <= TimeLagMiss)
                 {
                     Judgement(GetABS(Time.time - (notesManager.NotesTime[0] + GManager.instance.StartTime)), 2);
                 }
-                else if (notesManager.LaneNum[3] == 2)
+                else if (notesManager.LaneNum[3] == 2 && tempTimeLag <= TimeLagMiss)
                 {
                     Judgement(GetABS(Time.time - (notesManager.NotesTime[0] + GManager.instance.StartTime)), 3);
                 }
@@ -149,7 +202,7 @@ public class Judge : MonoBehaviour
 
                 else
                 {
-                    if (notesManager.LaneNum[1] == 2 && notesManager.NoteNum[0] == notesManager.NoteNum[1])
+                    if (notesManager.LaneNum[1] == 2 && notesManager.NoteNum[0] == notesManager.NoteNum[1] && tempTimeLag <= TimeLagMiss)
                     {
                         Judgement(GetABS(Time.time - (notesManager.NotesTime[1] + GManager.instance.StartTime)), 1);
                     }
@@ -158,21 +211,19 @@ public class Judge : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.K))
             {
                 longNoteflag3 = true;
-                if (notesManager.LaneNum[0] == 3)
+                if (notesManager.LaneNum[0] == 3 && tempTimeLag <= TimeLagMiss)
                 {
                     Judgement(GetABS(Time.time - (notesManager.NotesTime[0] + GManager.instance.StartTime)), 0);
                 }
-
-
-                else if (notesManager.LaneNum[1] == 3)
+                else if (notesManager.LaneNum[1] == 3 && tempTimeLag <= TimeLagMiss)
                 {
                     Judgement(GetABS(Time.time - (notesManager.NotesTime[0] + GManager.instance.StartTime)), 1);
                 }
-                else if (notesManager.LaneNum[2] == 3)
+                else if (notesManager.LaneNum[2] == 3 && tempTimeLag <= TimeLagMiss)
                 {
                     Judgement(GetABS(Time.time - (notesManager.NotesTime[0] + GManager.instance.StartTime)), 2);
                 }
-                else if (notesManager.LaneNum[3] == 3)
+                else if (notesManager.LaneNum[3] == 3 && tempTimeLag <= TimeLagMiss)
                 {
                     Judgement(GetABS(Time.time - (notesManager.NotesTime[0] + GManager.instance.StartTime)), 3);
                 }
@@ -180,7 +231,7 @@ public class Judge : MonoBehaviour
 
                 else
                 {
-                    if (notesManager.LaneNum[1] == 3 && notesManager.NoteNum[0] == notesManager.NoteNum[1])
+                    if (notesManager.LaneNum[1] == 3 && notesManager.NoteNum[0] == notesManager.NoteNum[1] && tempTimeLag <= TimeLagMiss)
                     {
                         Judgement(GetABS(Time.time - (notesManager.NotesTime[1] + GManager.instance.StartTime)), 1);
                     }
@@ -244,7 +295,7 @@ public class Judge : MonoBehaviour
                 for (int i = 0; i < notesManager.NotesTimeL.Count; i++)
                 {
                     if (Time.time > notesManager.NotesTimeL[i] + 0.0f + GManager.instance.StartTime && notesManager.LaneNumL[i] == 3)
-                    {     
+                    {
                         GManager.instance.ratioScore += 5;
                         GManager.instance.perfect++;
                         GManager.instance.combo++;
@@ -259,29 +310,33 @@ public class Judge : MonoBehaviour
 
             //float p = notesManager.NotesTimeL[0] + 0.1f + GManager.instance.StartTime;
             //Debug.Log(longNoteflag0+"A"+longNoteflag1 + "A" + longNoteflag2 + "A" + longNoteflag3);
-            if (Time.time > notesManager.NotesTimeL[0] + 0.1f + GManager.instance.StartTime)
+            if (notesManager.NotesTimeL.Count != 0)
             {
-                messageL(3);
-                deleteDataL(0);
-                Debug.Log("Miss");
-                GManager.instance.miss++;
-                GManager.instance.combo = 0;
-                //GManager.instance.ratioScore += 5;
-                //ミス
+                if (Time.time > notesManager.NotesTimeL[0] + 0.1f + GManager.instance.StartTime)
+                {
+                    messageL(3);
+                    deleteDataL(0);
+                    Debug.Log("Miss");
+                    GManager.instance.miss++;
+                    GManager.instance.combo = 0;
+                    //GManager.instance.ratioScore += 5;
+                    //ミス
+                }
             }
-
-            if (Time.time > notesManager.NotesTime[0] + 0.1f + GManager.instance.StartTime)//本来ノーツをたたくべき時間から0.1秒たっても入力がなかった場合
+            if (notesManager.NotesTime.Count != 0)
             {
-                message(3);
-                deleteData(0);
-                Debug.Log("Miss");
-                GManager.instance.miss++;
-                GManager.instance.combo = 0;
-                //GManager.instance.ratioScore += 5;
-                //ミス
+                if (Time.time > notesManager.NotesTime[0] + 0.1f + GManager.instance.StartTime)//本来ノーツをたたくべき時間から0.1秒たっても入力がなかった場合
+                {
+                    message(3);
+                    deleteData(0);
+                    Debug.Log("Miss");
+                    GManager.instance.miss++;
+                    GManager.instance.combo = 0;
+                    //GManager.instance.ratioScore += 5;
+                    //ミス
+                }
             }
         }
-
     }
     
 
@@ -441,5 +496,11 @@ public class Judge : MonoBehaviour
     {
         Instantiate(MessageObj[judge], new Vector3(notesManager.LaneNumL[0] - 1.5f, 0.76f, 0.15f), Quaternion.Euler(45, 0, 0));
     }
+    
 
+
+    public static (int,int, int, int, int, int, int) GetNum()
+    {
+        return (combo,maxcombo,score,perfect,great,good,miss);
+    }
 }

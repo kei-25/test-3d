@@ -14,7 +14,7 @@ public class Notes : MonoBehaviour
     }
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (GManager.instance.startFlag)
         {
             start = true;
         }

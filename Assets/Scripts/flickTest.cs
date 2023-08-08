@@ -29,16 +29,19 @@ public class flickTest : MonoBehaviour
             }
         if (GManager.instance.Start)
         {
-            if (Time.time > notesManager.NotesTimeF[0] + 0.1f + GManager.instance.StartTime)//本来ノーツをたたくべき時間から0.2秒たっても入力がなかった場合
+            if (notesManager.NotesTimeF.Count != 0)
             {
-                int lane = notesManager.LaneNumF[0];
-                message(lane, 1);
-                Debug.Log("Miss");
-                GManager.instance.miss++;
-                GManager.instance.combo = 0;
-                judge.deleteDataF(0);
-                //GManager.instance.ratioScore += 5;
-                //ミス
+                if (Time.time > notesManager.NotesTimeF[0] + 0.1f + GManager.instance.StartTime)//本来ノーツをたたくべき時間から0.2秒たっても入力がなかった場合
+                {
+                    int lane = notesManager.LaneNumF[0];
+                    message(lane, 1);
+                    Debug.Log("Miss");
+                    GManager.instance.miss++;
+                    GManager.instance.combo = 0;
+                    judge.deleteDataF(0);
+                    //GManager.instance.ratioScore += 5;
+                    //ミス
+                }
             }
         }
     }

@@ -49,25 +49,75 @@ public class NotesManager : MonoBehaviour
 
     private float NotesSpeed;
 
+    public DataB inputJsonSong;
+    public class DataB
+    {
+        public songSelect[] selectList;
+    }
+    [System.Serializable]
+    public class songSelect
+    {
+        public string songName;
+        public int difficultyEasy;
+        public int difficultyHard;
+        public int difficultyExpert;
+        public int difficultyMaster;
+    }
 
     public Note tempList;
 
     [SerializeField] GameObject noteObj;
     [SerializeField] GameObject noteObjFlick;
     [SerializeField] GameObject noteObjLong;
-
+    int SelectSongNum = SpawnClones.GetSelectSong();
+    int DifficultyNum = difficultyColour.GetDifficultyNum();
+    string difficlty;
     void Start()
     {
+        switch (DifficultyNum)
+        {
+            case 0:
+                difficlty = "EZ";
+                break;
+            case 1:
+                difficlty = "H";
+                break;
+            case 2:
+                difficlty = "E";
+                break;
+            case 3:
+                difficlty = "M";
+                break;
+        }
+        LoadJson("seetMusicSelect");
         NotesSpeed = GManager.instance.noteSpeed;
         noteNum = 0;
-        songName = "DangerM";
-        songNameFlick = "DangerMF";
+        string Noteseet = inputJsonSong.selectList[SelectSongNum].songName + difficlty;
+        songName = Noteseet;
+        string FlickSeetName = Noteseet + "F";
+        Debug.Log(FlickSeetName);
+        songNameFlick = FlickSeetName;
         songName = "seetMusic/" + songName;
         songNameFlick = "seetMusic/" + songNameFlick;
         Load(songName, songNameFlick);
     }
 
-    private void Load(string SongName, string songNameFlick)
+    private void LoadJson(string songselect)
+    {
+        // ResourcesフォルダからJSONファイルを読み込む
+        TextAsset textAsset = Resources.Load<TextAsset>(songselect);
+        if (textAsset != null)
+        {
+            // JSONデータをパースしてDataオブジェクトに変換
+            inputJsonSong = JsonUtility.FromJson<DataB>(textAsset.ToString());
+        }
+        else
+        {
+            Debug.LogError("Failed to load JSON file: " + songselect);
+        }
+    }
+
+        private void Load(string SongName, string songNameFlick)
     {
         float z;
         string inputString = Resources.Load<TextAsset>(SongName).ToString();
@@ -115,7 +165,7 @@ public class NotesManager : MonoBehaviour
             NoteNumF.Add(inputJsonFlick.notes[j].num);
             float x = inputJsonFlick.notes[j].block *0.5f;
             float zz = NotesTimeF[j] * NotesSpeed;
-            Debug.Log(x - 1.75);
+            //Debug.Log(x - 1.75);
             NotesObjF.Add(Instantiate(noteObjFlick, new Vector3(x - 1.75f, 0.5f, zz), Quaternion.identity));
 
         }
@@ -126,7 +176,7 @@ public class NotesManager : MonoBehaviour
         float tempZ;
         for (int j = 0; j < inputJson.notes.Length; j++)
         {
-            Debug.Log(j+" "+ inputJson.notes[j].type);
+            //Debug.Log(j+" "+ inputJson.notes[j].type);
             if (inputJson.notes[j].type == 2)
             {
                 float kankaku = 60 / (inputJson.BPM * (float)inputJson.notes[j].LPB);
