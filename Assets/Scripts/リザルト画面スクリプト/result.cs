@@ -7,12 +7,14 @@ using UnityEngine.SceneManagement;
 
 public class result : MonoBehaviour
 {
+    [SerializeField] GameObject gameObjectRank;
     [SerializeField] GameObject gameObjectScore;
     [SerializeField] GameObject gameObjectCombo;
     [SerializeField] GameObject gameObjectPerfect;
     [SerializeField] GameObject gameObjectGreat;
     [SerializeField] GameObject gameObjectGood;
     [SerializeField] GameObject gameObjectMiss;
+    string rankText = "";
 
     void Start()
     {
@@ -23,6 +25,69 @@ public class result : MonoBehaviour
 
     void ResultS(int score,int combo,int perfect,int great,int good,int miss)
     {
+        if(score >=990000)
+        {
+            rankText = "SSS";
+        }
+        else if(score >= 975000)
+        {
+            rankText = "SS";
+        }
+        else if (score >= 960000)
+        {
+            rankText = "S";
+        }
+        else if (score >= 940000)
+        {
+            rankText = "AAA";
+        }
+        else if (score >= 910000)
+        {
+            rankText = "AA";
+        }
+        else if (score >= 880000)
+        {
+            rankText = "A";
+        }
+        else if (score >= 800000)
+        {
+            rankText = "BBB";
+        }
+        else if (score >= 720000)
+        {
+            rankText = "BB";
+        }
+        else if (score >= 660000)
+        {
+            rankText = "B";
+        }
+        else if (score >= 550000)
+        {
+            rankText = "CCC";
+        }
+        else if (score >= 440000)
+        {
+            rankText = "CC";
+        }
+        else if (score >= 3300000)
+        {
+            rankText = "C";
+        }
+        else if (score >= 2500000)
+        {
+            rankText = "DDD";
+        }
+        else if (score >= 1700000)
+        {
+            rankText = "DD";
+        }
+        else if (score <= 1700000)
+        {
+            rankText = "D";
+        }
+
+        Transform rankTransform = gameObjectRank.transform;
+        TextMeshPro ranktextMeshPro = rankTransform.GetComponent<TextMeshPro>();
         Transform scoreTransform = gameObjectScore.transform;
         TextMeshPro scoretextMeshPro = scoreTransform.GetComponent<TextMeshPro>();
         Transform comboTransform = gameObjectCombo.transform;
@@ -36,6 +101,7 @@ public class result : MonoBehaviour
         Transform missTransform = gameObjectMiss.transform;
         TextMeshPro misstextMeshPro = missTransform.GetComponent<TextMeshPro>();
 
+        ranktextMeshPro.text = rankText;
         scoretextMeshPro.text = score.ToString();
         combotextMeshPro.text = combo.ToString();
         PerfecttextMeshPro.text = perfect.ToString();

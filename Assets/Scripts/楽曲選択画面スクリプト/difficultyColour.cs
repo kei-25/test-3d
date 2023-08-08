@@ -13,12 +13,13 @@ public class difficultyColour : MonoBehaviour
     public List<Material> backMaterialList = new List<Material>();
     public Material selectMaterial;
 
-    public static int sideNum = 0;
-
+    public static int sideNumS = 0;
+    int sideNum = 0;
     List<string> difficultyTextList = new List<string>() { "    EASY  Å®", "Å©  HARD  Å®", "Å© EXPERT Å®", "Å© MASTER  ." };
 
     void Start()
     {
+        sideNumS = 0;
         for (int i=0; i<4;i++)
         {
             string soezi = i.ToString();
@@ -28,7 +29,7 @@ public class difficultyColour : MonoBehaviour
         chengeMaterial(sideNum);
         spawnclones.chengeLv(sideNum);
     }
-
+    
     bool flag = true;
     void Update()
     {
@@ -43,6 +44,7 @@ public class difficultyColour : MonoBehaviour
             if (sideNum != 0)
             {
                 sideNum--;
+                sideNumS = sideNum;
                 chengeMaterial(sideNum);
                 spawnclones.chengeLv(sideNum);
             }
@@ -52,6 +54,7 @@ public class difficultyColour : MonoBehaviour
             if (sideNum != 3)
             {
                 sideNum++;
+                sideNumS = sideNum;
                 chengeMaterial(sideNum);
                 spawnclones.chengeLv(sideNum);
             }
@@ -82,6 +85,6 @@ public class difficultyColour : MonoBehaviour
     }
     public static int GetDifficultyNum()
     {
-        return sideNum;
+        return sideNumS;
     }
 }

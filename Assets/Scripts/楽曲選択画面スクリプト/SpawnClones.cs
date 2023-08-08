@@ -34,6 +34,8 @@ public class SpawnClones : MonoBehaviour
         public int difficultyMaster;
     }
 
+    public static int UpDownNumS = 0;
+
     public string jacketSongName;
     public List<Material> jacketMaterialList = new List<Material>();
 
@@ -44,7 +46,8 @@ public class SpawnClones : MonoBehaviour
     //public Renderer[] renderers; // 透明にするオブジェクトのRendererコンポーネントの配列
     public List<Renderer> renderers = new List<Renderer>();
     void Start()
-    { 
+    {
+        UpDownNumS = 0;
         LoadJson(songselect);
         selectMaterial = Resources.Load<Material>("Materials/NameBack/songNameBack");
         notSelectMaterial = Resources.Load<Material>("Materials/NameBack/songNameBack1");
@@ -120,7 +123,7 @@ public class SpawnClones : MonoBehaviour
         }
     }
 
-    public static int UpDownNum = 0;
+    public int UpDownNum = 0;
     int j = 0;
     private void Update()
     {
@@ -133,10 +136,12 @@ public class SpawnClones : MonoBehaviour
                 {
                     moveObject(2);
                     UpDownNum = 0;
+                    UpDownNumS = UpDownNum;
                 }
                 else
                 {
                     moveObject(0);
+                    UpDownNumS = UpDownNum;
                 }
                 materialChange(UpDownNum);
 
@@ -151,10 +156,12 @@ public class SpawnClones : MonoBehaviour
                 {
                     moveObject(3);
                     UpDownNum = SelectObjs.Count-1;
+                    UpDownNumS = UpDownNum;
                 }
                 else
                 {
                     moveObject(1);
+                    UpDownNumS = UpDownNum;
                 }
                 materialChange(UpDownNum);
             }
@@ -412,7 +419,7 @@ public class SpawnClones : MonoBehaviour
     }
     public static int GetSelectSong()
     {
-        return UpDownNum;
+        return UpDownNumS;
     }
 
 }

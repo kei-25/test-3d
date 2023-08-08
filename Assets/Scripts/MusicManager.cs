@@ -51,7 +51,7 @@ public class MusicManager : MonoBehaviour
 
     // Update is called once per frame
     float elapsedTime = 0f;
-    public float SetTime = 2f;
+    public float SetTime = 0.1f;
     void Update()
     {
         if (!played)

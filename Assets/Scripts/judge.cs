@@ -26,6 +26,9 @@ public class Judge : MonoBehaviour
     AudioSource audio;
     [SerializeField] AudioClip hitSound;
     float lastTime = 0;
+    bool NoteFlag = true;
+    bool NoteLFlag = true;
+    bool NoteFFlag = true;
     void Start()
     {
         audio = GetComponent<AudioSource>();
@@ -56,14 +59,53 @@ public class Judge : MonoBehaviour
     public static int great;
     public static int good;
     public static int miss;
+
+    float NotelastTime;
+    float NotelastTimeL;
+    float NotelastTimeF;
     void Update()
     {
 
         if(!flag)
         {
-            float NotelastTime = notesManager.NotesTime[notesManager.NotesTime.Count - 1];
-            float NotelastTimeL = notesManager.NotesTimeL[notesManager.NotesTimeL.Count - 1];
-            float NotelastTimeF = notesManager.NotesTimeF[notesManager.NotesTimeF.Count - 1];
+            if (notesManager.NotesTime.Count == 0)
+            {
+                NoteFlag = false;
+            }
+            if (notesManager.NotesTimeL.Count == 0)
+            {
+                NoteLFlag = false;
+            }
+            if (notesManager.NotesTimeF.Count == 0)
+            {
+                NoteFFlag = false;
+            }
+
+            if (NoteFlag)
+            {
+                NotelastTime = notesManager.NotesTime[notesManager.NotesTime.Count - 1];
+            }
+            else
+            {
+                NotelastTime = 0;
+            }
+            if (NoteLFlag)
+            {
+                NotelastTimeL = notesManager.NotesTimeL[notesManager.NotesTimeL.Count - 1];
+            }
+            else
+            {
+                NotelastTimeL = 0;
+            }
+            if (NoteFFlag)
+            {
+                NotelastTimeF = notesManager.NotesTimeF[notesManager.NotesTimeF.Count - 1];
+            }
+            else
+            {
+                NotelastTimeF = 0;
+            }
+
             for (int i = 0; i < 3; i++)
             {
                 if (NotelastTime > NotelastTimeL)
@@ -85,7 +127,7 @@ public class Judge : MonoBehaviour
         if (GManager.instance.Start)
         {
             time += Time.deltaTime;
-            if(time>lastTime + 0.4f && !timeFlag)
+            if (time > lastTime + 0.4f && !timeFlag)
             {
                 combo = GManager.instance.combo;
                 maxcombo = GManager.instance.maxCombo;
@@ -336,6 +378,30 @@ public class Judge : MonoBehaviour
                     //ミス
                 }
             }
+
+            /*
+            if (notesManager.NotesTimeL.Count != 0)
+            {
+                if (Time.time > notesManager.NotesTimeL[0] + 0f + GManager.instance.StartTime)
+                {
+                    messageL(0);
+                    deleteDataL(0);
+                    GManager.instance.ratioScore += 5;
+                    GManager.instance.perfect++;
+                    GManager.instance.combo++;
+                }
+            }
+            if (notesManager.NotesTime.Count != 0)
+            {
+                if (Time.time > notesManager.NotesTime[0] + 0f + GManager.instance.StartTime)//本来ノーツをたたくべき時間から0.1秒たっても入力がなかった場合
+                {
+                    message(0);
+                    deleteData(0);
+                    GManager.instance.ratioScore += 5;
+                    GManager.instance.perfect++;
+                    GManager.instance.combo++;
+                }
+            }*/
         }
     }
     

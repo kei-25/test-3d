@@ -10,6 +10,8 @@ public class jacket : MonoBehaviour
     //public string jacketSongName;
     public Material noneSelectMaterial;
     public List<string> songNameList = new List<string>();
+
+    public int UpDownNum = 0;
     //public List<Material> jacketMaterialList= new List<Material>();
     void Start()
     {
@@ -18,7 +20,7 @@ public class jacket : MonoBehaviour
     }
 
     bool flag = true;
-    public int UpDownNum = 0;
+    
     void Update()
     {
         if (flag)//一番最初のジャケット画像を貼り付ける

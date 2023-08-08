@@ -1,3 +1,5 @@
+//ƒm[ƒc‚ª—¬‚ê‚Ä‚­‚é‚Ì‚ª’x‚¯‚ê‚Îoffset‚ğ¬‚³‚­‚µA‘‚¯‚ê‚Î‘å‚«‚­‚·‚é
+
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -95,7 +97,7 @@ public class NotesManager : MonoBehaviour
         string Noteseet = inputJsonSong.selectList[SelectSongNum].songName + difficlty;
         songName = Noteseet;
         string FlickSeetName = Noteseet + "F";
-        Debug.Log(FlickSeetName);
+        Debug.Log(Noteseet+" "+FlickSeetName);
         songNameFlick = FlickSeetName;
         songName = "seetMusic/" + songName;
         songNameFlick = "seetMusic/" + songNameFlick;
