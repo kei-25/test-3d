@@ -14,49 +14,45 @@ public class difficultyColour : MonoBehaviour
     public Material selectMaterial;
 
     public static int sideNumS = 0;
-    int sideNum = 0;
     List<string> difficultyTextList = new List<string>() { "    EASY  →", "←  HARD  →", "← EXPERT →", "← MASTER  ." };
 
     void Start()
     {
-        sideNumS = 0;
+        //sideNumS = 0;
         for (int i=0; i<4;i++)
         {
             string soezi = i.ToString();
             string pathName = "Materials/difficulty/M" + soezi;
             backMaterialList.Add(Resources.Load<Material>(pathName));
         }
-        chengeMaterial(sideNum);
-        spawnclones.chengeLv(sideNum);
+        chengeMaterial(sideNumS);
+        spawnclones.chengeLv(sideNumS);
     }
     
     bool flag = true;
     void Update()
     {
-        if (flag)//一番最初のジャケット画像を貼り付ける
+        if (flag)
         {
             flag = false;
-            chengeMaterial(0);
+            spawnclones.chengeLv(sideNumS);
         }
-
         if (Input.GetKeyDown(KeyCode.LeftArrow))
         {
-            if (sideNum != 0)
+            if (sideNumS != 0)
             {
-                sideNum--;
-                sideNumS = sideNum;
-                chengeMaterial(sideNum);
-                spawnclones.chengeLv(sideNum);
+                sideNumS--;
+                chengeMaterial(sideNumS);
+                spawnclones.chengeLv(sideNumS);
             }
         }
         if (Input.GetKeyDown(KeyCode.RightArrow))
         {
-            if (sideNum != 3)
+            if (sideNumS != 3)
             {
-                sideNum++;
-                sideNumS = sideNum;
-                chengeMaterial(sideNum);
-                spawnclones.chengeLv(sideNum);
+                sideNumS++;
+                chengeMaterial(sideNumS);
+                spawnclones.chengeLv(sideNumS);
             }
         }
     }

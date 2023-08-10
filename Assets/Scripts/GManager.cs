@@ -8,8 +8,8 @@ public class GManager : MonoBehaviour
 
     public bool startFlag = false;
 
-    public float maxScore;//new!!
-    public float ratioScore;//new!!
+    public float maxScore;
+    public float ratioScore;
 
     public int songID;
     public float noteSpeed;
@@ -28,6 +28,8 @@ public class GManager : MonoBehaviour
 
     public void Awake()
     {
+        var tempNoteSpeed = SettingManager.GetNum();
+        noteSpeed = noteSpeed + tempNoteSpeed.Item1;
         if (instance == null)
         {
             instance = this;

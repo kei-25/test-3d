@@ -2,22 +2,27 @@ using System.Collections;
 using System.Collections.Generic;
 using System;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class flickTest : MonoBehaviour
 {
     [SerializeField] private GameObject[] MessageObj;
     [SerializeField] NotesManager notesManager;
     [SerializeField] Judge judge;
-    // Start is called before the first frame update
+    [SerializeField] AudioClip hitSound;
+    AudioSource audio;
     void Start()
     {
-
+        audio = GetComponent<AudioSource>();
     }
 
-    // Update is called once per frame
+    private void OnMouseDown()
+    {
+        SceneManager.LoadScene("selectSongScene");
+    }
     void Update()
     {
-            Vector3 mousePosition = Input.mousePosition;
+        Vector3 mousePosition = Input.mousePosition;
             // カーソル位置のz座標を10に
             mousePosition.z = 10;
             // カーソル位置をワールド座標に変換
@@ -31,7 +36,7 @@ public class flickTest : MonoBehaviour
         {
             if (notesManager.NotesTimeF.Count != 0)
             {
-                if (Time.time > notesManager.NotesTimeF[0] + 0.1f + GManager.instance.StartTime)//本来ノーツをたたくべき時間から0.2秒たっても入力がなかった場合
+                if (Time.time > notesManager.NotesTimeF[0] + 0.1f + GManager.instance.StartTime)
                 {
                     int lane = notesManager.LaneNumF[0];
                     message(lane, 1);
@@ -40,7 +45,6 @@ public class flickTest : MonoBehaviour
                     GManager.instance.combo = 0;
                     judge.deleteDataF(0);
                     //GManager.instance.ratioScore += 5;
-                    //ミス
                 }
             }
         }
@@ -180,6 +184,7 @@ public class flickTest : MonoBehaviour
 
     void manager(int i)
     {
+        audio.PlayOneShot(hitSound);
         GManager.instance.ratioScore += 5;
         GManager.instance.perfect++;
         GManager.instance.combo++;

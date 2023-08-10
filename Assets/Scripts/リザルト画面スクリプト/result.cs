@@ -116,7 +116,7 @@ public class result : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Return))
         {
-            SceneManager.LoadScene("selectSongDisplay");
+            SceneManager.LoadScene("selectSongScene");
         }
     }
 }

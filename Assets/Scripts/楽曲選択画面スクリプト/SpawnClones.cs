@@ -12,6 +12,8 @@ public class SpawnClones : MonoBehaviour
     [SerializeField] GameObject gameObjectDifficultyText;
     [SerializeField] GameObject gameObjectJacket;
     [SerializeField] GameObject gameObjecttransition;
+    [SerializeField] GameObject gameObjectB;
+    [SerializeField] GameObject gameObjectSetting;
     public Data inputJson;
     public List<GameObject> SelectObjs = new List<GameObject>();
     public List<GameObject> tempSelectObjs = new List<GameObject>();
@@ -124,7 +126,7 @@ public class SpawnClones : MonoBehaviour
     }
 
     public int UpDownNum = 0;
-    int j = 0;
+
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.UpArrow))
@@ -171,12 +173,14 @@ public class SpawnClones : MonoBehaviour
         {
             
         }*/
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.Space))
         {
-            Debug.Log("Space");
+            Debug.Log("Return");
             tempSelectObjs = SelectObjs;
             tempSelectObjs.Add(gameObjectBack);
             tempSelectObjs.Add(gameObjectDifficultyText);
+            tempSelectObjs.Add(gameObjectB);
+            tempSelectObjs.Add(gameObjectSetting);
             StartCoroutine(MoveObjectsAndLoadScene(tempSelectObjs.ToArray()));
         }
             
@@ -282,7 +286,7 @@ public class SpawnClones : MonoBehaviour
     GameObject targetObject;
     private void materialChange(int targetObjectNameNum)
     {
-        // 指定した名前のオブジェクトを検索します。
+
         for (int i = 0; i < inputJson.selectList.Length; i++)
         {
             targetObjectName = i.ToString();
@@ -301,7 +305,7 @@ public class SpawnClones : MonoBehaviour
         targetObjectName = targetObjectNameNum.ToString();
         targetObject = GameObject.Find(targetObjectName);
 
-        // オブジェクトが見つかった場合にはマテリアルを変更します。
+
         if (targetObject != null)
         {
             Renderer renderer = targetObject.GetComponent<Renderer>();

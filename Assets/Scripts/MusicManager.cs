@@ -35,11 +35,9 @@ public class MusicManager : MonoBehaviour
 
     private void LoadJson(string songselect)
     {
-        // ResourcesフォルダからJSONファイルを読み込む
         TextAsset textAsset = Resources.Load<TextAsset>(songselect);
         if (textAsset != null)
         {
-            // JSONデータをパースしてDataオブジェクトに変換
             inputJsonSong = JsonUtility.FromJson<DataB>(textAsset.ToString());
         }
         else
@@ -70,19 +68,16 @@ public class MusicManager : MonoBehaviour
 
     IEnumerator PlayMusic()
     {
-        // Resourcesフォルダから音楽ファイルをロード
-        AudioClip musicClip = Resources.Load<AudioClip>("Musics/" + songName); // musicFileNameは実際のファイル名に置き換える
+        AudioClip musicClip = Resources.Load<AudioClip>("Musics/" + songName);
 
         if (musicClip != null)
         {
-            // AudioSourceコンポーネントを取得または追加
             AudioSource audioSource = GetComponent<AudioSource>();
             if (audioSource == null)
             {
                 audioSource = gameObject.AddComponent<AudioSource>();
             }
 
-            // 音楽を再生
             audioSource.clip = musicClip;
             audioSource.Play();
         }

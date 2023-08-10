@@ -65,7 +65,6 @@ public class NotesManager : MonoBehaviour
         public int difficultyExpert;
         public int difficultyMaster;
     }
-
     public Note tempList;
 
     [SerializeField] GameObject noteObj;
@@ -74,6 +73,8 @@ public class NotesManager : MonoBehaviour
     int SelectSongNum = SpawnClones.GetSelectSong();
     int DifficultyNum = difficultyColour.GetDifficultyNum();
     string difficlty;
+
+    float settingOffset;
     void Start()
     {
         switch (DifficultyNum)
@@ -91,6 +92,9 @@ public class NotesManager : MonoBehaviour
                 difficlty = "M";
                 break;
         }
+        var tempNoteSpeed = SettingManager.GetNum();
+        settingOffset = tempNoteSpeed.Item2;
+
         LoadJson("seetMusicSelect");
         NotesSpeed = GManager.instance.noteSpeed;
         noteNum = 0;
@@ -106,11 +110,9 @@ public class NotesManager : MonoBehaviour
 
     private void LoadJson(string songselect)
     {
-        // ResourcesフォルダからJSONファイルを読み込む
         TextAsset textAsset = Resources.Load<TextAsset>(songselect);
         if (textAsset != null)
         {
-            // JSONデータをパースしてDataオブジェクトに変換
             inputJsonSong = JsonUtility.FromJson<DataB>(textAsset.ToString());
         }
         else
@@ -125,15 +127,14 @@ public class NotesManager : MonoBehaviour
         string inputString = Resources.Load<TextAsset>(SongName).ToString();
         Data inputJson = JsonUtility.FromJson<Data>(inputString);
 
-        
+        float tempOffset = inputJson.offset + settingOffset;
         int soeziL = 0;
         for (int i = 0; i < inputJson.notes.Length; i++)
         {
 
-            //GmanagerのnoteSpeedによってノーツの間隔を決定する
             float kankaku = 60 / (inputJson.BPM * (float)inputJson.notes[i].LPB);
             float beatSec = kankaku * (float)inputJson.notes[i].LPB;
-            float time = (beatSec * inputJson.notes[i].num / (float)inputJson.notes[i].LPB) + inputJson.offset * 0.01f;
+            float time = (beatSec * inputJson.notes[i].num / (float)inputJson.notes[i].LPB) + tempOffset * 0.01f;
           
             z = time * NotesSpeed;
 
@@ -155,12 +156,12 @@ public class NotesManager : MonoBehaviour
         noteNum = inputJson.notes.Length;
         noteNumSum = noteNum + noteNumFlick;
 
+        float tempOffsetF = inputJsonFlick.offset + settingOffset;
         for (int j = 0; j < inputJsonFlick.notes.Length; j++)
         {
-            //GmanagerのnoteSpeedによってノーツの間隔を決定する
             float kankaku = 60 / (inputJsonFlick.BPM * (float)inputJsonFlick.notes[j].LPB);
             float beatSec = kankaku * (float)inputJsonFlick.notes[j].LPB;
-            float time = (beatSec * inputJsonFlick.notes[j].num / (float)inputJsonFlick.notes[j].LPB) + inputJsonFlick.offset * 0.01f;
+            float time = (beatSec * inputJsonFlick.notes[j].num / (float)inputJsonFlick.notes[j].LPB) + tempOffset * 0.01f;
             NotesTimeF.Add(time);
             LaneNumF.Add(inputJsonFlick.notes[j].block);
             NoteTypeF.Add(inputJsonFlick.notes[j].type);
@@ -176,6 +177,7 @@ public class NotesManager : MonoBehaviour
         float beatSecT;
         float timeT;
         float tempZ;
+
         for (int j = 0; j < inputJson.notes.Length; j++)
         {
             //Debug.Log(j+" "+ inputJson.notes[j].type);
@@ -183,14 +185,14 @@ public class NotesManager : MonoBehaviour
             {
                 float kankaku = 60 / (inputJson.BPM * (float)inputJson.notes[j].LPB);
                 float beatSec = kankaku * (float)inputJson.notes[j].LPB;
-                float time = (beatSec * inputJson.notes[j].num / (float)inputJson.notes[j].LPB) + inputJson.offset * 0.01f;
+                float time = (beatSec * inputJson.notes[j].num / (float)inputJson.notes[j].LPB) + tempOffset * 0.01f;
                 z = time * NotesSpeed;
 
                 Note[] longNoteList = inputJson.notes[j].notes;
                 int tempNum = longNoteList[0].num;
                 kankakuT = 60 / (inputJson.BPM * (float)inputJson.notes[j].LPB);
                 beatSecT = kankakuT * (float)inputJson.notes[j].LPB;
-                timeT = (beatSecT * tempNum / (float)inputJson.notes[j].LPB) + inputJson.offset * 0.01f;
+                timeT = (beatSecT * tempNum / (float)inputJson.notes[j].LPB) + tempOffset * 0.01f;
                 tempZ = timeT * NotesSpeed;
 
                 float scaleZ = tempZ - z;
@@ -199,16 +201,19 @@ public class NotesManager : MonoBehaviour
                 NotesObjL.Add(Instantiate(noteObjLong, new Vector3(inputJson.notes[j].block - 1.5f, 0.48f, lnv3z), Quaternion.identity));
                 NotesObjL[soeziL].transform.localScale = new Vector3(1, 0.05f, scaleZ);
                 soeziL = soeziL + 1;
-                int lninterval = tempNum - inputJson.notes[j].num;
+                int lninterval = tempNum - inputJson.notes[j].num-1;
                 for (int k = 0; k <lninterval ; k++)
                 {
-                    int tempNumL = inputJson.notes[j].num + k;
-                    float kankakuL = 60 / (inputJson.BPM * (float)inputJson.notes[j].LPB);
-                    float beatSecL = kankakuL * (float)inputJson.notes[j].LPB;
-                    float timeL = (beatSecL * tempNumL / (float)inputJson.notes[j].LPB) + inputJson.offset * 0.01f;
-                    NotesTimeL.Add(timeL);
-                    LaneNumL.Add(inputJson.notes[j].block);
-                    NoteNumL.Add(tempNumL);
+                    if (k % 2 == 0)
+                    {
+                        int tempNumL = inputJson.notes[j].num + k;
+                        float kankakuL = 60 / (inputJson.BPM * (float)inputJson.notes[j].LPB);
+                        float beatSecL = kankakuL * (float)inputJson.notes[j].LPB;
+                        float timeL = (beatSecL * tempNumL / (float)inputJson.notes[j].LPB) + tempOffset * 0.01f;
+                        NotesTimeL.Add(timeL);
+                        LaneNumL.Add(inputJson.notes[j].block);
+                        NoteNumL.Add(tempNumL);
+                    }
                 }
             }
         }
